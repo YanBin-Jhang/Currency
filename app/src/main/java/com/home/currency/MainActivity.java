@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    float exchangeRate = 30.9f;
+    float usExchangeRate = 30.9f;
+    float jpExchangeRate = 0.28f;
     private EditText edNtd;
+    private TextView tvJP;
+    private TextView tvUS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,24 +27,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void findViews() {
         edNtd = findViewById(R.id.ntd);
+        tvJP = findViewById(R.id.jp);
+        tvUS = findViewById(R.id.us);
     }
 
     public void exchange(View view) {
         if (edNtd.getText().toString().trim().length() == 0) {
             new AlertDialog.Builder(this)
-                    .setTitle("Problem")
-                    .setMessage("Please enter your NTD amount")
-                    .setPositiveButton("OK", null)
+                    .setTitle(R.string.problem)
+                    .setMessage(R.string.warn_message)
+                    .setPositiveButton(R.string.ok, null)
                     .show();
         } else {
             float ntdValue = Float.parseFloat(edNtd.getText().toString());
-            float usdValue = ntdValue / exchangeRate;
+            float usdValue = ntdValue / usExchangeRate;
+            float jpValue = ntdValue / jpExchangeRate;
             Log.d("MainActivity", "USD: " + usdValue);
 
+            tvUS.setText(String.valueOf(usdValue));
+            tvJP.setText(String.valueOf(jpValue));
+
             new AlertDialog.Builder(this)
-                    .setTitle("Result")
-                    .setMessage("USD is " + usdValue)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.result)
+                    .setMessage(getString(R.string.usd_is) + usdValue)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             edNtd.setText("");
